@@ -1,0 +1,8 @@
+{
+  "parent": "makomod:stoned_pillar",
+  "textures": {
+      "0": "makomod:block/stoned_pillar_empty",
+      "1": "makomod:block/stoned",
+      "particle": "makomod:block/stoned_pillar_empty"
+  }
+}
