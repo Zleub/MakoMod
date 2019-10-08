@@ -3,13 +3,18 @@ package org.zleub.makomod;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.model.*;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.fluid.IFluidState;
+import net.minecraft.fluid.WaterFluid;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.BucketItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.nbt.CompoundNBT;
@@ -23,7 +28,10 @@ import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fluids.FluidAttributes;
+import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.fml.InterModComms;
+import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -51,6 +59,8 @@ import java.util.stream.Stream;
 
 import sun.reflect.Reflection;
 
+import static net.minecraft.item.Items.BUCKET;
+
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod("makomod")
@@ -58,24 +68,24 @@ public class MakoMod
 {
     // Directly reference a log4j logger.
     public static final Logger LOGGER = LogManager.getLogger();
-    public static BlockModel inner;
+//    public static BlockModel inner;
 //    public static BlockState inner;
     public static Map<ResourceLocation, IBakedModel> innerMap = new HashMap<ResourceLocation, IBakedModel>();
-
-     public static String readFile(String path) {
-            try {
-                Path p = Paths.get(MakoMod.class.getResource("/assets/makomod/" + path).toURI());
-                BufferedReader bufferedreader = Files.newBufferedReader(p);
-                return bufferedreader.lines().collect(Collectors.joining());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return "";
-        }
-
-    static {
-
-    }
+//
+//     public static String readFile(String path) {
+//            try {
+//                Path p = Paths.get(MakoMod.class.getResource("/assets/makomod/" + path).toURI());
+//                BufferedReader bufferedreader = Files.newBufferedReader(p);
+//                return bufferedreader.lines().collect(Collectors.joining());
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//            return "";
+//        }
+//
+//    static {
+//
+//    }
 
 
     public MakoMod() {
@@ -130,7 +140,9 @@ public class MakoMod
     static {
         blocks.put("makomod:stoned", new BlockStoned(Block.Properties.create(Material.ROCK)));
         blocks.put("makomod:stoned_pillar", new BlockStonedPillar(Block.Properties.create(Material.ROCK).lightValue(15)));
-//        blocks.put("makomod:stoned_pillar_inner", new Block(Block.Properties.create(Material.ROCK)));
+        blocks.put("makomod:mako", new FlowingFluidBlock(
+                RegistryObject.of( new ResourceLocation("makomod:mako_still"), ForgeRegistries.FLUIDS ),
+                Block.Properties.create(Material.WATER)));
     }
 
     // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
@@ -145,16 +157,27 @@ public class MakoMod
             blocks.forEach( (k, v) -> blockRegistryEvent.getRegistry().register(v.setRegistryName(k)) );
         }
 
+//        public static final FlowingFluid WATER = (FlowingFluid)register("water", new Source());
+
         @SubscribeEvent
         public static void registerItems(RegistryEvent.Register<Item> event) {
             blocks.forEach( (k, v) -> event.getRegistry().register(new BlockItem(v, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(k)) );
+           event.getRegistry().register(new BucketItem(
+                RegistryObject.of( new ResourceLocation("makomod:mako_still"), ForgeRegistries.FLUIDS ),
+                   (new Item.Properties()).containerItem(BUCKET).maxStackSize(1).group(ItemGroup.MISC)).setRegistryName("makomod:mako_bucket")
+           );
+//           event.getRegistry().addBucketForFluid(FluidRegistry.getFluid(TestFluid.name));
+
         }
 
-//        @SubscribeEvent
-//        public static void registerModel(ModelRegistryEvent event) {
-//            LOGGER.info("hello from model");
-//            ModelLoaderRegistry.registerLoader(BlockStonedPillar.CustomModelLoader.INSTANCE);
-//        }
+        @SubscribeEvent
+        public static void registerFluids(RegistryEvent.Register<Fluid> event) {
+            event.getRegistry().register(new ForgeFlowingFluid.Source(FluidMako.props).setRegistryName("makomod:mako_still"));
+            event.getRegistry().register(new ForgeFlowingFluid.Flowing(FluidMako.props).setRegistryName("makomod:mako_flowing"));
+
+//            event.getRegistry().addBucketForFluid(FluidRegistry.getFluid(TestFluid.name));
+
+        }
 
       @SubscribeEvent
         public static void registerTileEntity(RegistryEvent.Register<TileEntityType<?>> event) {
@@ -183,7 +206,7 @@ public class MakoMod
 ////            LOGGER.info(model.);
 ////            IBakedModel test = new BlockStonedPillar.ModelStonePillar(), )
 //            BlockModel pillar = BlockModel.deserialize(readFile("models/block/stoned_pillar.json"));
-//            inner = BlockModel.deserialize(readFile("models/block/stoned_pillar_inner.json"));
+//            inner = BlockModel.deserialize(readFile("models/block/_stoned_pillar_inner.json"));
 
 ////            pillar.getElements().add(inner.getElements().get(0));
 //
@@ -193,6 +216,10 @@ public class MakoMod
 //
 //
 //            e.getModelRegistry().replace( new ModelResourceLocation("makomod:stoned_pillar#level=1"), dm);
+
+//            BlockModel inner = BlockModel.deserialize(Utils.readFile("models/block/_stoned_pillar_inner.json"));
+
+
             Minecraft mc = Minecraft.getInstance();
             ModelLoader modelbakery = new ModelLoader(mc.getResourceManager(), mc.getTextureMap(), mc.getBlockColors(), mc.getProfiler());
 
@@ -208,11 +235,17 @@ public class MakoMod
                 else
                     fluidTex = fluid.getAttributes().getStillTexture();
 
-                inner = BlockModel.deserialize(MakoMod.readFile("models/block/stoned_pillar_inner.json"));
-                inner.textures.replace("0", fluidTex == null ? "minecraft:block/missingno" : fluidTex.toString());
+                for (int i = 4; i <= 16; i += 4) {
+                    String json = Utils.readFile("models/block/_stoned_pillar_inner.json")
+                            .replace("[[height]]", String.valueOf(i))
+                            .replace("[[r_height]]", String.valueOf(16 - i));
+                    LOGGER.info(json);
+                    BlockModel inner = BlockModel.deserialize(json);
+                    inner.textures.replace("0", fluidTex == null ? "minecraft:block/missingno" : fluidTex.toString());
 
-                IBakedModel baked = inner.bake(modelbakery, mc.getTextureMap()::getSprite, ModelRotation.X0_Y0, net.minecraft.client.renderer.vertex.DefaultVertexFormats.BLOCK );
-                innerMap.put(new ResourceLocation("makomod", rl.getPath()), baked);
+                    IBakedModel baked = inner.bake(modelbakery, mc.getTextureMap()::getSprite, ModelRotation.X0_Y0, net.minecraft.client.renderer.vertex.DefaultVertexFormats.BLOCK );
+                    innerMap.put(new ResourceLocation("makomod", rl.getPath() + "level" + (i / 4)), baked);
+                }
             } );
             LOGGER.info(innerMap);
         }

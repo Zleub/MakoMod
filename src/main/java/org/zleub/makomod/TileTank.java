@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MinecraftGame;
@@ -18,6 +19,7 @@ import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.crash.CrashReportCategory;
+import net.minecraft.fluid.FlowingFluid;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.nbt.CompoundNBT;
@@ -44,6 +46,7 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.apache.logging.log4j.spi.LoggerRegistry;
 import org.lwjgl.opengl.GL11;
 import sun.reflect.Reflection;
 import sun.rmi.runtime.Log;
@@ -60,7 +63,7 @@ import java.util.logging.Logger;
 public class TileTank extends TileEntity {
     public static TileEntityType<?> TankType;
 
-    protected FluidTank tank = new FluidTank(4);
+    protected FluidTank tank = new FluidTank(4000);
     private final LazyOptional<IFluidHandler> holder = LazyOptional.of(() -> tank);
 
 
@@ -158,7 +161,10 @@ public class TileTank extends TileEntity {
             if (te.tank.getFluid().getFluid() != Fluids.EMPTY) {
 
                 BlockState blockState = ForgeRegistries.BLOCKS.getValue(te.tank.getFluid().getFluid().getRegistryName()).getDefaultState();
-                IBakedModel iBakedModel = MakoMod.innerMap.get(new ResourceLocation("makomod:" + te.tank.getFluid().getFluid().getRegistryName().getPath()));
+//                blockState.getBlock().delegate;
+//                Logger.getGlobal().info(blockState.toString());
+                String model_name = "makomod:" + te.tank.getFluid().getFluid().getRegistryName().getPath() + "level" + (te.tank.getFluidAmount() / FluidAttributes.BUCKET_VOLUME);
+                IBakedModel iBakedModel = MakoMod.innerMap.get(new ResourceLocation(model_name));
 
                 BlockPos blockPos = blockpos;
                 BufferBuilder bufferBuilder = renderer;

@@ -63,12 +63,11 @@ public class BlockStonedPillar extends Block
    	    LazyOptional<IFluidHandler> fluidHandler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
 
     	 if(FluidUtil.interactWithFluidHandler(player, handIn,worldIn, te.getPos(), null)) {
-          return true; // return true as we did something
+              return true; // return true as we did something
         }
 //    	LOGGER.info(heldItem.getItem().properties);
 //        if (heldItem)
         return FluidUtil.getFluidHandler(heldItem) != null;
-
     }
 
     @Override
