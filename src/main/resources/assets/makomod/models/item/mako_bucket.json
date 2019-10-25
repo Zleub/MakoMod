@@ -1,8 +1,5 @@
 {
-    "parent": "forge:forgebucket",
-    "textures": {
-        "layer0": "forge:items/bucket_base",
-        "layer1": "forge:items/bucket_fluid",
-        "layer2": "forge:items/bucket_cover"
-    }
+  "parent": "forge:item/bucket",
+  "loader": "forge:bucket",
+  "fluid": "makomod:mako"
 }

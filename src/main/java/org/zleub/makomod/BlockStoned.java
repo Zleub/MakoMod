@@ -10,7 +10,7 @@ public class BlockStoned extends Block {
 
     @Override
     public BlockRenderLayer getRenderLayer() {
-      return BlockRenderLayer.CUTOUT;
-   }
+        return BlockRenderLayer.CUTOUT;
+    }
 
 }

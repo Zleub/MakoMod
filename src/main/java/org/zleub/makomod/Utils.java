@@ -7,7 +7,7 @@ import java.nio.file.Paths;
 import java.util.stream.Collectors;
 
 public class Utils {
-     public static String readFile(String path) {
+    public static String readFile(String path) {
         try {
             Path p = Paths.get(MakoMod.class.getResource("/assets/makomod/" + path).toURI());
             BufferedReader bufferedreader = Files.newBufferedReader(p);

@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"textures": {
 		"0": "",
-		"1": "makomod:block/stoned_pillar",
-		"particle": "makomod:block/stoned_pillar"
+		"1": "makomod:block/stoned",
+		"particle": "makomod:block/stoned"
 	},
 	"elements": [
 		{
