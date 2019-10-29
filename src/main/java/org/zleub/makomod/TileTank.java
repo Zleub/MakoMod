@@ -31,6 +31,8 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL46;
 import sun.rmi.runtime.Log;
 
 
@@ -49,7 +51,6 @@ public class TileTank extends TileEntity implements ITickableTileEntity {
 
     protected FluidTank tank;
     private final LazyOptional<IFluidHandler> holder = LazyOptional.of(() -> tank);
-
     private LazyOptional<IFluidHandler>[] neighbors;
 
     public TileTank(TileEntityType<?> p_i48289_1_) {
@@ -128,8 +129,6 @@ public class TileTank extends TileEntity implements ITickableTileEntity {
                 FluidUtil.tryFluidTransfer(this.tank, handler, handler.getFluidInTank(1), true);
         }
     }
-
-
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
@@ -217,7 +216,6 @@ public class TileTank extends TileEntity implements ITickableTileEntity {
                 GlStateManager.shadeModel(7424);
             }
 
-
             BlockModelRenderer.enableCache();
 
             renderer.begin(7, DefaultVertexFormats.BLOCK);
@@ -247,6 +245,7 @@ public class TileTank extends TileEntity implements ITickableTileEntity {
             BlockModelRenderer.disableCache();
 //                GlStateManager.disableBlend();
 //            GlStateManager.popMatrix();
+
             RenderHelper.enableStandardItemLighting();
         }
     }

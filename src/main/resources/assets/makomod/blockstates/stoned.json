@@ -1,7 +1,11 @@
 {
-    "variants": {
-        "": [
-            { "model": "makomod:block/stoned" }
-        ]
-    }
+    "multipart": [
+        {
+            "apply" : {
+            "model": "makomod:block/stoned"
+        }}, {
+            "when": { "enabled": "true" },
+            "apply": { "model": "makomod:block/stoned_pillar_enabled", "uvlock": true }
+        }
+    ]
 }

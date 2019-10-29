@@ -61,6 +61,16 @@ public class BlockStonedPillar extends Block {
     }
 
     @Override
+    public void neighborChanged(BlockState state, World world, BlockPos pos, Block bock, BlockPos update_pos, boolean bool) {
+        super.neighborChanged(state, world, pos, bock, update_pos, bool);
+        updateTankNeigbors(world, pos);
+
+        BlockPos test = update_pos.subtract( pos );
+        Direction from = Direction.func_218383_a(test.getX(), test.getY(), test.getZ());
+//        world.notifyNeighborsOfStateExcept(pos, this, from);
+    }
+
+    @Override
     public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         ItemStack heldItem = player.getHeldItem(handIn);
         TileTank te = (TileTank) world.getTileEntity(pos);

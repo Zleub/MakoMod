@@ -150,13 +150,18 @@ public class MakoMod {
         @SubscribeEvent
         public static void registerTileEntity(RegistryEvent.Register<TileEntityType<?>> event) {
             LOGGER.info("hello from tileentities");
-//          LOGGER.info(Minecraft.getInstance().getTextureManager().getTexture(ResourceLocation.tryCreate("minecraft:stone")));
+
             TileEntityType<?> type = TileEntityType.Builder.create(() -> new TileTank(TileTank.TankType), blocks.get("makomod:stoned_pillar")).build(null);
             TileTank.TankType = type;
             type.setRegistryName("makomod", "tank");
             event.getRegistry().register(type);
 
             ClientRegistry.bindTileEntitySpecialRenderer(TileTank.class, new TileTank.TileTankRenderer());
+
+            type = TileEntityType.Builder.create(() -> new TilePillar(TilePillar.PillarType), blocks.get("makomod:stoned")).build(null);
+            TilePillar.PillarType = type;
+            type.setRegistryName("makomod", "pillar");
+            event.getRegistry().register(type);
         }
 
 //        @SubscribeEvent
