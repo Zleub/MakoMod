@@ -28,10 +28,10 @@ import java.util.logging.Logger;
 
 import static net.minecraftforge.fluids.capability.CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
 
-public class BlockStonedPillar extends Block {
+public class BlockStonedTank extends Block {
     public static final IntegerProperty LEVEL = BlockStateProperties.LEVEL_0_3;
 
-    public BlockStonedPillar(Block.Properties props) {
+    public BlockStonedTank(Block.Properties props) {
         super(props);
         this.setDefaultState(this.stateContainer.getBaseState().with(LEVEL, 0));
     }
@@ -68,6 +68,7 @@ public class BlockStonedPillar extends Block {
         BlockPos test = update_pos.subtract( pos );
         Direction from = Direction.func_218383_a(test.getX(), test.getY(), test.getZ());
 //        world.notifyNeighborsOfStateExcept(pos, this, from);
+        world.getBlockState(pos.down()).neighborChanged(world, pos.down(), this, pos, false);
     }
 
     @Override

@@ -6,7 +6,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.AtlasTexture;
-import net.minecraft.client.renderer.texture.ITickable;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.fluid.Fluids;
@@ -29,12 +28,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GL46;
-import sun.rmi.runtime.Log;
-
 
 
 import javax.annotation.Nonnull;
@@ -43,7 +37,7 @@ import java.util.Random;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 
-import static org.zleub.makomod.BlockStonedPillar.LEVEL;
+import static org.zleub.makomod.BlockStonedTank.LEVEL;
 
 public class TileTank extends TileEntity implements ITickableTileEntity {
     public static TileEntityType<?> TankType;
@@ -184,7 +178,7 @@ public class TileTank extends TileEntity implements ITickableTileEntity {
 
             World world = te.getWorld();
             int f = (int)(((float)te.tank.getFluidAmount() / te.tank.getCapacity()) * 3);
-            BlockState newstate = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("makomod:stoned_pillar")).getDefaultState().with(LEVEL, f);
+            BlockState newstate = MakoMod.blocks.get("makomod:stoned_tank").getDefaultState().with(LEVEL, f);
             world.setBlockState(pos, newstate);
             world.notifyBlockUpdate(pos, newstate, newstate, 2);
         }

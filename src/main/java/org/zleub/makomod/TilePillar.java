@@ -29,7 +29,6 @@ public class TilePillar extends TileEntity implements ITickableTileEntity {
 
     @Override
     public void tick() {
-        Logger.getGlobal().info("tick: " + pos);
         BlockPos i = new BlockPos(pos.up());
         FluidStack fs = new FluidStack(ForgeRegistries.FLUIDS.getValue(new ResourceLocation("makomod:mako_still")), 250);
         while ((world.getTileEntity(i) != null)
@@ -70,8 +69,6 @@ public class TilePillar extends TileEntity implements ITickableTileEntity {
                 break ;
             }
         }
-
-        Logger.getGlobal().info("" + extract);
 
         if (extract && (world.getTileEntity(i) != null)
                 && world.getTileEntity(i).getCapability(FLUID_HANDLER_CAPABILITY).isPresent()

@@ -103,7 +103,7 @@ public class MakoMod {
 
     static {
         blocks.put("makomod:stoned", new BlockStoned(Block.Properties.create(Material.ROCK)));
-        blocks.put("makomod:stoned_pillar", new BlockStonedPillar(
+        blocks.put("makomod:stoned_tank", new BlockStonedTank(
             Block.Properties.create(Material.ROCK)
                     .lightValue(15)
                 .variableOpacity()
@@ -151,7 +151,7 @@ public class MakoMod {
         public static void registerTileEntity(RegistryEvent.Register<TileEntityType<?>> event) {
             LOGGER.info("hello from tileentities");
 
-            TileEntityType<?> type = TileEntityType.Builder.create(() -> new TileTank(TileTank.TankType), blocks.get("makomod:stoned_pillar")).build(null);
+            TileEntityType<?> type = TileEntityType.Builder.create(() -> new TileTank(TileTank.TankType), blocks.get("makomod:stoned_tank")).build(null);
             TileTank.TankType = type;
             type.setRegistryName("makomod", "tank");
             event.getRegistry().register(type);
@@ -190,17 +190,19 @@ public class MakoMod {
                     fluidTex = fluid.getAttributes().getStillTexture();
 
                 // size of block in blockstate format / nbr of models
-                int size = BlockStonedPillar.LEVEL.getAllowedValues().size();
+                int size = BlockStonedTank.LEVEL.getAllowedValues().size();
                 float ratio = 16 / size;
-                BlockStonedPillar.LEVEL.getAllowedValues().forEach(i -> {
-                    String json = Utils.readFile("models/block/_stoned_pillar_inner.json")
+                BlockStonedTank.LEVEL.getAllowedValues().forEach(i -> {
+                    String json = Utils.readFile("models/block/_stoned_tank_inner.json")
                             .replace("[[height]]", String.valueOf(((i + 1) * ratio)))
                             .replace("[[r_height]]", String.valueOf(16 - ((i + 1) * ratio)));
                     BlockModel inner = BlockModel.deserialize(json);
                     inner.textures.replace("0", fluidTex == null ? "minecraft:block/missingno" : fluidTex.toString());
 
                     IBakedModel baked = inner.bake(modelbakery, mc.getTextureMap()::getSprite, ModelRotation.X0_Y0, net.minecraft.client.renderer.vertex.DefaultVertexFormats.BLOCK);
-                    innerMap.put(new ResourceLocation("makomod", rl.getPath() + "level" + i), baked);
+                    ResourceLocation location = new ResourceLocation("makomod", rl.getPath() + "level" + i);
+                    LOGGER.info("Model created: " + location);
+                    innerMap.put(location, baked);
                 });
 
             });

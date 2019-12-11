@@ -1,15 +1,17 @@
-local grid_width, grid_height = 21, 21
-local cell_width, cell_height = 32, 32
+local grid_width, grid_height = 200, 200
+local cell_width, cell_height = 8, 8
 
 function circle(r)
     return function (x, y)
         local cx, cy = math.floor(grid_width / 2), math.floor(grid_height / 2)
-        return math.floor(  (x - cx) ^ 2 + (y - cy) ^ 2 ) <= r ^ 2
-            and math.floor(  (x - cx) ^ 2 + (y - cy) ^ 2 ) >= (r - 0.5) ^ 2
+        --return math.floor(  (x - cx) ^ 2 + (y - cy) ^ 2 ) <= r ^ 2
+        --    and math.floor(  (x - cx) ^ 2 + (y - cy) ^ 2 ) >= (r - 0.5) ^ 2
+        return math.cos(math.floor(  (x - cx) ^ 2 + (y - cy) ^ 2 )) * math.cos(math.floor(  (x - cx) ^ 2 + (y - cy) ^ 2 )) > r / 10
+        --return math.cos(x) * math.cos(y) < r /10
     end
 end
 
-local d = 1
+local d = 0
 
 local m = {
     { x = math.floor(grid_width / 2), y = math.floor(grid_height / 2) }
@@ -27,14 +29,14 @@ for i = 0, d do
     local _m = {}
     for i, v in ipairs(m) do
         local x, y = v.x, v.y
-        table.insert(_m, { x = x + 3, y = y + 1 })
-        table.insert(_m, { x = x + 3, y = y - 1 })
-        table.insert(_m, { x = x - 3, y = y + 1 })
-        table.insert(_m, { x = x - 3, y = y - 1 })
-        table.insert(_m, { x = x + 1, y = y + 3 })
-        table.insert(_m, { x = x + 1, y = y - 3 })
-        table.insert(_m, { x = x - 1, y = y - 3 })
-        table.insert(_m, { x = x - 1, y = y + 3 })
+        table.insert(_m, { x = x + 2, y = y + 1 })
+        table.insert(_m, { x = x + 2, y = y - 1 })
+        table.insert(_m, { x = x - 2, y = y + 1 })
+        table.insert(_m, { x = x - 2, y = y - 1 })
+        table.insert(_m, { x = x + 1, y = y + 2 })
+        table.insert(_m, { x = x + 1, y = y - 2 })
+        table.insert(_m, { x = x - 1, y = y - 2 })
+        table.insert(_m, { x = x - 1, y = y + 2 })
     end
     for i, v in ipairs(_m) do
         insert(v)
@@ -110,21 +112,21 @@ function love.draw()
                 love.graphics.setColor(255, 0, 0, 255)
                 love.graphics.rectangle("fill", x, y, cell_width - 3, cell_height - 3)
             end
-            if knight( getTime() )(i, j) then
-                love.graphics.setColor(0, 255, 0, 255)
-                love.graphics.rectangle("fill", x, y, cell_width - 3, cell_height - 3)
-            end
-            if knightTweak( getTime() )(i, j) then
-                love.graphics.setColor(0, 0, 255, 255)
-                love.graphics.rectangle("fill", x, y, cell_width - 3, cell_height - 3)
-            end
-            if knight( getTime() )(i, j) and knightTweak( getTime() )(i, j) then
-                love.graphics.setColor(0, 127, 127, 255)
-                love.graphics.rectangle("fill", x, y, cell_width - 3, cell_height - 3)
-            else
-                love.graphics.setColor(255, 255, 255, 255)
-                love.graphics.rectangle("line", x, y, cell_width - 3, cell_height - 3)
-            end
+            --if knight( 1 )(i, j) then
+            --    love.graphics.setColor(0, 255, 0, 255)
+            --    love.graphics.rectangle("fill", x, y, cell_width - 3, cell_height - 3)
+            --end
+            --if knightTweak( getTime() )(i, j) then
+            --    love.graphics.setColor(0, 0, 255, 255)
+            --    love.graphics.rectangle("fill", x, y, cell_width - 3, cell_height - 3)
+            --end
+            --if knight( getTime() )(i, j) and knightTweak( getTime() )(i, j) then
+            --    love.graphics.setColor(0, 127, 127, 255)
+            --    love.graphics.rectangle("fill", x, y, cell_width - 3, cell_height - 3)
+            --else
+            --    love.graphics.setColor(255, 255, 255, 255)
+            --    love.graphics.rectangle("line", x, y, cell_width - 3, cell_height - 3)
+            --end
         end
     end
 
