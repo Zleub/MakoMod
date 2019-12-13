@@ -1,23 +1,31 @@
 package org.zleub.makomod;
 
+import com.google.common.collect.ImmutableMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.model.BlockModel;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ModelRotation;
+import net.minecraft.client.renderer.model.*;
+import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.BucketItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.client.event.ModelBakeEvent;
-import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.client.model.*;
+import net.minecraftforge.client.model.obj.OBJLoader;
+import net.minecraftforge.client.model.obj.OBJModel;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
@@ -31,6 +39,7 @@ import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -49,6 +58,14 @@ public class MakoMod {
     // Directly reference a log4j logger.
     public static final Logger LOGGER = LogManager.getLogger();
     public static Map<ResourceLocation, IBakedModel> innerMap = new HashMap<ResourceLocation, IBakedModel>();
+
+    public static void print(String msg) {
+        LOGGER.info(msg);
+
+        MinecraftServer mcs = ServerLifecycleHooks.getCurrentServer();
+        if (mcs != null)
+            mcs.getPlayerList().sendMessage(new StringTextComponent(msg));
+    }
 
     public MakoMod() {
         // Register the setup method for modloading
@@ -75,6 +92,8 @@ public class MakoMod {
     private void doClientStuff(final FMLClientSetupEvent event) {
         // do something that can only be done on the client
         LOGGER.info("Got game settings {}", event.getMinecraftSupplier().get().gameSettings);
+
+        OBJLoader.INSTANCE.addDomain("makomod");
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event) {
@@ -111,6 +130,7 @@ public class MakoMod {
         blocks.put("makomod:mako", new FlowingFluidBlock(
                 RegistryObject.of(new ResourceLocation("makomod:mako_still"), ForgeRegistries.FLUIDS),
                 Block.Properties.create(Material.WATER)));
+        blocks.put("makomod:matrix", new BlockMatrix((Block.Properties.create(Material.ROCK))));
     }
 
     // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
@@ -155,20 +175,28 @@ public class MakoMod {
             TileTank.TankType = type;
             type.setRegistryName("makomod", "tank");
             event.getRegistry().register(type);
-
             ClientRegistry.bindTileEntitySpecialRenderer(TileTank.class, new TileTank.TileTankRenderer());
 
             type = TileEntityType.Builder.create(() -> new TilePillar(TilePillar.PillarType), blocks.get("makomod:stoned")).build(null);
             TilePillar.PillarType = type;
             type.setRegistryName("makomod", "pillar");
             event.getRegistry().register(type);
+
+
+            type = TileEntityType.Builder.create(() -> new TileMatrix(TileMatrix.MatrixType), blocks.get("makomod:matrix")).build(null);
+            TileMatrix.MatrixType = type;
+            type.setRegistryName("makomod", "matrix");
+            event.getRegistry().register(type);
+            ClientRegistry.bindTileEntitySpecialRenderer(TileMatrix.class, new TileMatrix.TileMatrixRenderer());
+
+
         }
 
-//        @SubscribeEvent
-//        public static void registerModel(ModelRegistryEvent event) {
-//            LOGGER.info("hello from model");
+        @SubscribeEvent
+        public static void registerModel(ModelRegistryEvent event) {
+            LOGGER.info("hello from model");
 //            ModelLoaderRegistry.registerLoader(BlockStonedPillar.CustomModelLoader.INSTANCE);
-//        }
+        }
 
         @SubscribeEvent
         public static void registerBakedModels(ModelBakeEvent e) {
@@ -200,12 +228,41 @@ public class MakoMod {
                     inner.textures.replace("0", fluidTex == null ? "minecraft:block/missingno" : fluidTex.toString());
 
                     IBakedModel baked = inner.bake(modelbakery, mc.getTextureMap()::getSprite, ModelRotation.X0_Y0, net.minecraft.client.renderer.vertex.DefaultVertexFormats.BLOCK);
-                    ResourceLocation location = new ResourceLocation("makomod", rl.getPath() + "level" + i);
+                    ResourceLocation location = new ResourceLocation("makomod", "_stoned_tank_inner_" + rl.getPath() + "_level" + i);
                     LOGGER.info("Model created: " + location);
                     innerMap.put(location, baked);
                 });
 
             });
+
+            String json = Utils.readFile("models/block/matrix_stone1.json");
+            BlockModel stone = BlockModel.deserialize(json);
+
+            IBakedModel baked = stone.bake(modelbakery, mc.getTextureMap()::getSprite, ModelRotation.X0_Y0, net.minecraft.client.renderer.vertex.DefaultVertexFormats.BLOCK);
+            ResourceLocation location = new ResourceLocation("makomod", "matrix_stone1");
+            LOGGER.info("Model created: " + location);
+            innerMap.put(location, baked);
+
+//            try {
+//            IUnbakedModel model = ModelLoaderRegistry.getModelOrLogError(new ResourceLocation("makomod:block/matrix.obj"),
+//                    "Missing water wheel mod﻿el");
+//
+//            if (model instanceof OBJModel) {
+//               IBakedModel bakedModel = model.bake(e.getModelLoader(), ModelLoader.defaultTextureGetter(), new BasicState(model.getDefaultState(), false), DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
+//                e.getModelRegistry().put(new ModelResourceLocation("makomod:matrix", ""), bakedModel);
+//            }
+//
+//            } catch (Exception ec) {
+//                ec.printStackTrace();
+//            }
+
         }
+
+//        @SubscribeEvent
+//        public static void onPreTextureStitch(TextureStitchEvent.Pre event) {
+//            event.addSprite(
+//              ResourceLocation.tryCreate("makomod:block/stone_test")
+//            );
+//        }
     }
 }

@@ -57,15 +57,15 @@ public class TileTank extends TileEntity implements ITickableTileEntity {
     public void read(CompoundNBT tag) {
         super.read(tag);
         tank.readFromNBT(tag);
-        Logger.getGlobal().info("read " + tag);
-        Logger.getGlobal().info(tank.getFluid().toString());
+//        Logger.getGlobal().info("read " + tag);
+//        Logger.getGlobal().info(tank.getFluid().toString());
     }
 
     @Override
     public CompoundNBT write(CompoundNBT tag) {
         CompoundNBT nbt = super.write(tag);
         tank.writeToNBT(tag);
-        Logger.getGlobal().info("write " + tag);
+//        Logger.getGlobal().info("write " + tag);
         return nbt;
     }
 
@@ -81,13 +81,13 @@ public class TileTank extends TileEntity implements ITickableTileEntity {
     public CompoundNBT getUpdateTag() {
         CompoundNBT nbt = super.getUpdateTag();
         tank.writeToNBT(nbt);
-        MakoMod.LOGGER.info("getUpdateTag {}", nbt);
+//        MakoMod.LOGGER.info("getUpdateTag {}", nbt);
         return nbt;
     }
 
     @Override
     public void handleUpdateTag(CompoundNBT nbt) {
-        Logger.getGlobal().info("handleUpdateTag " + nbt);
+//        Logger.getGlobal().info("handleUpdateTag " + nbt);
         tank.readFromNBT(nbt);
     }
 
@@ -96,7 +96,7 @@ public class TileTank extends TileEntity implements ITickableTileEntity {
         //Write your data into the nbtTag
         CompoundNBT nbt = new CompoundNBT();
         tank.writeToNBT(nbt);
-        MakoMod.LOGGER.info("getupdatepacket {}", nbt);
+//        MakoMod.LOGGER.info("getupdatepacket {}", nbt);
         return new SUpdateTileEntityPacket(getPos(), 1, nbt);
     }
 
@@ -128,7 +128,7 @@ public class TileTank extends TileEntity implements ITickableTileEntity {
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         CompoundNBT nbt = pkt.getNbtCompound();
         //Handle your Data
-        Logger.getGlobal().info("ondatapacket " + nbt);
+//        Logger.getGlobal().info("ondatapacket " + nbt);
         tank.readFromNBT(nbt);
     }
 
@@ -221,7 +221,7 @@ public class TileTank extends TileEntity implements ITickableTileEntity {
                 BlockState blockState = ForgeRegistries.BLOCKS.getValue(te.tank.getFluid().getFluid().getRegistryName()).getDefaultState();
 //                blockState.getBlock().delegate;
 //                Logger.getGlobal().info(blockState.toString());
-                String model_name = "makomod:" + te.tank.getFluid().getFluid().getRegistryName().getPath() + "level" + (te.tank.getFluidAmount() / FluidAttributes.BUCKET_VOLUME);
+                String model_name = "makomod:" + "_stoned_tank_inner_" + te.tank.getFluid().getFluid().getRegistryName().getPath() + "_level" + (te.tank.getFluidAmount() / FluidAttributes.BUCKET_VOLUME);
                 IBakedModel iBakedModel = MakoMod.innerMap.get(new ResourceLocation(model_name));
 
                 BlockPos blockPos = blockpos;
