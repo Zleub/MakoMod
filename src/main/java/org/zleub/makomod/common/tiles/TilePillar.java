@@ -1,4 +1,4 @@
-package org.zleub.makomod;
+package org.zleub.makomod.common.tiles;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.tags.BlockTags;
@@ -11,10 +11,7 @@ import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.apache.logging.log4j.spi.LoggerRegistry;
-import net.minecraft.util.ResourceLocation;
-
-import java.util.logging.Logger;
+import org.zleub.makomod.common.blocks.BlockStoned;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.cos;

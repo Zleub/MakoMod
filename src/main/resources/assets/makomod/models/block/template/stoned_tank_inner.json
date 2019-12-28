@@ -1,0 +1,22 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"fluid": "((fluid))",
+		"1": "makomod:block/stoned",
+		"particle": "makomod:block/stoned"
+	},
+	"elements": [
+		{
+			"from": [3, 0, 3],
+			"to": [13, ((height)), 13],
+			"faces": {
+				"north": {"uv": [2, ((r_height)), 14, ((height)) ], "texture": "#fluid", "tintindex" : 1},
+				"east": {"uv": [2, ((r_height)), 14, ((height)) ], "texture": "#fluid", "tintindex" : 1},
+				"south": {"uv": [2, ((r_height)), 14, ((height)) ], "texture": "#fluid", "tintindex" : 1},
+				"west": {"uv": [2, ((r_height)), 14, ((height)) ], "texture": "#fluid", "tintindex" : 1},
+				"up": {"uv": [2, 2, 14, 14], "texture": "#fluid", "tintindex" : 1},
+				"down": {"uv": [2, 2, 14, 14], "texture": "#1", "tintindex" : 1}
+			}
+		}
+    ]
+}

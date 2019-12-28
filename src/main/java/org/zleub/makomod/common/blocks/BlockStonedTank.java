@@ -1,4 +1,4 @@
-package org.zleub.makomod;
+package org.zleub.makomod.common.blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -15,16 +15,13 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import org.zleub.makomod.common.tiles.TileTank;
 
 import javax.annotation.Nullable;
-import java.util.logging.Logger;
 
 import static net.minecraftforge.fluids.capability.CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
 

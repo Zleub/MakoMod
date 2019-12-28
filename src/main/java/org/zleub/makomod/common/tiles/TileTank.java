@@ -1,4 +1,4 @@
-package org.zleub.makomod;
+package org.zleub.makomod.common.tiles;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.block.BlockState;
@@ -29,15 +29,16 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.zleub.makomod.MakoMod;
+import org.zleub.makomod.client.models.RegistryModels;
 
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Random;
 import java.util.function.Predicate;
-import java.util.logging.Logger;
 
-import static org.zleub.makomod.BlockStonedTank.LEVEL;
+import static org.zleub.makomod.common.blocks.BlockStonedTank.LEVEL;
 
 public class TileTank extends TileEntity implements ITickableTileEntity {
     public static TileEntityType<?> TankType;
@@ -178,7 +179,7 @@ public class TileTank extends TileEntity implements ITickableTileEntity {
 
             World world = te.getWorld();
             int f = (int)(((float)te.tank.getFluidAmount() / te.tank.getCapacity()) * 3);
-            BlockState newstate = MakoMod.blocks.get("makomod:stoned_tank").getDefaultState().with(LEVEL, f);
+            BlockState newstate = world.getBlockState(pos).with(LEVEL, f);
             world.setBlockState(pos, newstate);
             world.notifyBlockUpdate(pos, newstate, newstate, 2);
         }
@@ -187,8 +188,6 @@ public class TileTank extends TileEntity implements ITickableTileEntity {
     public static class TileTankRenderer extends TileEntityRenderer<TileTank> {
         @Override
         public void render(TileTank te, double x, double y, double z, float partialTick, int destroyStage) {
-//            Logger.getGlobal().info("test render");
-
             Minecraft mc = Minecraft.getInstance();
             Tessellator tessellator = Tessellator.getInstance();
             BufferBuilder renderer = tessellator.getBuffer();
@@ -221,8 +220,8 @@ public class TileTank extends TileEntity implements ITickableTileEntity {
                 BlockState blockState = ForgeRegistries.BLOCKS.getValue(te.tank.getFluid().getFluid().getRegistryName()).getDefaultState();
 //                blockState.getBlock().delegate;
 //                Logger.getGlobal().info(blockState.toString());
-                String model_name = "makomod:" + "_stoned_tank_inner_" + te.tank.getFluid().getFluid().getRegistryName().getPath() + "_level" + (te.tank.getFluidAmount() / FluidAttributes.BUCKET_VOLUME);
-                IBakedModel iBakedModel = MakoMod.innerMap.get(new ResourceLocation(model_name));
+                String model_name = "makomod:" + "stoned_tank_inner_" + te.tank.getFluid().getFluid().getRegistryName().getPath() + "_level" + (te.tank.getFluidAmount() / FluidAttributes.BUCKET_VOLUME);
+                IBakedModel iBakedModel = RegistryModels.innerMap.get(new ResourceLocation(model_name));
 
                 BlockPos blockPos = blockpos;
                 BufferBuilder bufferBuilder = renderer;

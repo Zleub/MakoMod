@@ -1,4 +1,4 @@
-package org.zleub.makomod;
+package org.zleub.makomod.common.tiles;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.block.BlockState;
@@ -8,7 +8,6 @@ import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
@@ -18,9 +17,9 @@ import net.minecraftforge.client.model.ModelDataManager;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.registries.ForgeRegistries;
+import org.zleub.makomod.MakoMod;
+import org.zleub.makomod.client.models.RegistryModels;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -88,7 +87,7 @@ public class TileMatrix extends TileEntity {
             renderer.setTranslation(x - (double) blockpos.getX(), y - (double) blockpos.getY(), z - (double) blockpos.getZ());
 
             BlockState blockState = te.getBlockState();
-            IBakedModel iBakedModel = MakoMod.innerMap.get(new ResourceLocation("makomod:matrix_stone1"));
+            IBakedModel iBakedModel = RegistryModels.innerMap.get(new ResourceLocation("makomod:matrix_stone1"));
 
             BlockPos blockPos = blockpos;
             BufferBuilder bufferBuilder = renderer;

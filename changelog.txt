@@ -346,9 +346,9 @@ Build: 1.14.4-28.0.45 - Mon Aug 05 12:56:59 GMT 2019
 
 	cpw:
 		Move fml's PlayerEvent and TickEvent to forge. Update `import
-		net.minecraftforge.fml.common.gameevent.PlayerEvent;` to `import
+		net.minecraftforge.fml.org.zleub.makomod.common.gameevent.PlayerEvent;` to `import
 		net.minecraftforge.event.entity.player.PlayerEvent;` and `import
-		net.minecraftforge.fml.common.gameevent.TickEvent;` to `import
+		net.minecraftforge.fml.org.zleub.makomod.common.gameevent.TickEvent;` to `import
 		net.minecraftforge.event.TickEvent;`
 		Signed-off-by: cpw <cpw+github@weeksfamily.ca>
 
@@ -469,7 +469,7 @@ Build: 1.14.4-28.0.22 - Sun Jul 28 17:45:41 GMT 2019
 	cpw:
 		Load default configs from the defaultconfig directory by default. (Can
 		be overridden in the fml.toml config file if desired).
-		Will load any type of config tracked file from there - client, common,
+		Will load any type of config tracked file from there - client, org.zleub.makomod.common,
 		server or custom tracked file. This means you can ship defaults for your
 		pack in a defaultconfig directory. I am thinking about ways to force a
 		specific config override for an existing config.

@@ -1,4 +1,4 @@
-package org.zleub.makomod;
+package org.zleub.makomod.common.fluids;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.fluid.FlowingFluid;
@@ -23,12 +23,12 @@ public class FluidMako extends FlowingFluid {
             new ResourceLocation("makomod:block/mako_flow")
     ).overlay(new ResourceLocation("makomod:block/mako_overlay"));
 
-    static ForgeFlowingFluid.Properties props = new ForgeFlowingFluid.Properties(
+    public static ForgeFlowingFluid.Properties props = new ForgeFlowingFluid.Properties(
             RegistryObject.of(new ResourceLocation("makomod:mako_still"), ForgeRegistries.FLUIDS),
             RegistryObject.of(new ResourceLocation("makomod:mako_flowing"), ForgeRegistries.FLUIDS),
             attr)
-            .bucket(RegistryObject.of(new ResourceLocation("makomod:mako_bucket"), ForgeRegistries.ITEMS))
-            .block(RegistryObject.of(new ResourceLocation("makomod:mako"), ForgeRegistries.BLOCKS));
+        .bucket(RegistryObject.of(new ResourceLocation("makomod:mako_bucket"), ForgeRegistries.ITEMS))
+        .block(RegistryObject.of(new ResourceLocation("makomod:mako"), ForgeRegistries.BLOCKS));
 
     @Override
     public Fluid getFlowingFluid() {
